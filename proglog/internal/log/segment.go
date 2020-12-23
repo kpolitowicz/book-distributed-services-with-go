@@ -78,7 +78,7 @@ func (s *segment) Read(off uint64) (*api.Record, error) {
 	if err != nil {
 		return nil, err
 	}
-	p, err := s.store.ReadAt(pos)
+	p, err := s.store.Read(pos)
 	if err != nil {
 		return nil, err
 	}
@@ -91,16 +91,6 @@ func (s *segment) IsMaxed() bool {
 	return s.store.size >= s.config.Segment.MaxStoreBytes || s.index.size >= s.config.Segment.MaxIndexBytes
 }
 
-func (s *segment) Close() error {
-	if err := s.index.Close(); err != nil {
-		return err
-	}
-	if err := s.store.Close(); err != nil {
-		return err
-	}
-	return nil
-}
-
 func (s *segment) Remove() error {
 	if err := s.Close(); err != nil {
 		return err
@@ -109,6 +99,16 @@ func (s *segment) Remove() error {
 		return err
 	}
 	if err := os.Remove(s.store.Name()); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *segment) Close() error {
+	if err := s.index.Close(); err != nil {
+		return err
+	}
+	if err := s.store.Close(); err != nil {
 		return err
 	}
 	return nil
