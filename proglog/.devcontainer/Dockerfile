@@ -22,9 +22,18 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "source /usr/local/shar
 # Make vi the default editor
 RUN echo 'export EDITOR=vi' >> /home/vscode/.bashrc
 
-# Install protobuf and other deps needed to generate bindings.
+# Install protobuf tooling
 RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/protoc-3.14.0-linux-x86_64.zip
 RUN unzip protoc-3.14.0-linux-x86_64.zip -d /usr/local/protobuf
-RUN chown -R vscode.vscode /usr/local/protobuf
 RUN echo 'export PATH="$PATH:/usr/local/protobuf/bin"' >> /home/vscode/.bashrc
+
+# Install protoc generators for golang
 RUN go get github.com/gogo/protobuf/protoc-gen-gogo
+# Install gRPC generators
+RUN go get google.golang.org/grpc
+
+# Make protoc binary installed above findable to vscode user
+RUN chown -R vscode /usr/local/protobuf
+# Allow `make compile` to write to /go/pkg/mod
+RUN mkdir /go/pkg/mod
+RUN chown vscode /go/pkg/mod
