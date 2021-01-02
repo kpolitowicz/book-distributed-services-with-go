@@ -18,3 +18,13 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "source /usr/local/shar
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+
+# Make vi the default editor
+RUN echo 'export EDITOR=vi' >> /home/vscode/.bashrc
+
+# Install protobuf and other deps needed to generate bindings.
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/protoc-3.14.0-linux-x86_64.zip
+RUN unzip protoc-3.14.0-linux-x86_64.zip -d /usr/local/protobuf
+RUN chown -R vscode.vscode /usr/local/protobuf
+RUN echo 'export PATH="$PATH:/usr/local/protobuf/bin"' >> /home/vscode/.bashrc
+RUN go get github.com/gogo/protobuf/protoc-gen-gogo
