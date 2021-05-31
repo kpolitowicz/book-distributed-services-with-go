@@ -45,8 +45,9 @@ RUN bash /tmp/library-scripts/go-debian.sh "none" "/usr/local/go" "${GOPATH}" "$
 RUN echo 'export EDITOR=vi' >> /home/vscode/.bashrc
 
 # Install protobuf tooling
-RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/protoc-3.14.0-linux-x86_64.zip
-RUN unzip protoc-3.14.0-linux-x86_64.zip -d /usr/local/protobuf
+RUN wget https://github.com/protocolbuffers/protobuf/releases/download/v3.14.0/protoc-3.14.0-linux-aarch_64.zip
+RUN unzip protoc-3.14.0-linux-aarch_64.zip -d /usr/local/protobuf
+RUN chmod -R o+rx /usr/local/protobuf
 RUN echo 'export PATH="$PATH:/usr/local/protobuf/bin"' >> /home/vscode/.bashrc
 
 # Install protoc generators for golang
