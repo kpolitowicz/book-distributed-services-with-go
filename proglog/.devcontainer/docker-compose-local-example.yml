@@ -1,0 +1,7 @@
+version: '3.7'
+services:
+  golang:
+    build:
+      # dockerfile: Dockerfile.arm64
+      dockerfile: Dockerfile
+  
